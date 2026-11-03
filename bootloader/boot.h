@@ -28,7 +28,11 @@ typedef UINT8                   BOOLEAN;
 #define FALSE ((UINT8) 0)
 #define TRUE ((UINT8) 1)
 #define MAX_BIT ((UINTN) 1 << (sizeof(UINTN)*8 - 1))
-
+#define MAX_UINT8 ((UINT8)-1)
+#define MAX_UINT16 ((UINT16)-1)
+#define MAX_UINT32 ((UINT32)-1)
+#define MAX_UINT64 ((UINT64)-1)
+#define MAX_UINTN ((UINTN)-1)
 // Tipos esenciales para el estándar:
 typedef VOID *EFI_HANDLE;
 typedef UINTN RETURN_STATUS;
