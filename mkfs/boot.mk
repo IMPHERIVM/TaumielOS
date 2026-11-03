@@ -1,6 +1,7 @@
 CC		:= gcc
-SRC		:= /../bootloader/boot.c 
-CFLAGS	:= -std=c11 -Wall -Wextra -ffreestanding -fshort-wchar -fno-stack-protector -mno-red-zone -fpic
+SRC		:= ../bootloader/boot.c 
+CSTD	:= ?=c11
+CFLAGS	:= -std+=(CSTD) -Wall -Wextra -ffreestanding -fshort-wchar -fno-stack-protector -mno-red-zone -fpic
 OBJ		:= ($SRC:.c=.o)
 DEPS	:= ($OBJ:.o=.d)
 
