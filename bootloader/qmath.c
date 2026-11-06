@@ -1,5 +1,5 @@
 #include "boot.h"
-#include "qmath.c"
+#include "qmath.h"
 
 
 Q16_16 QMATH_SUM_16(Q16_16 self, Q16_16 other) {
