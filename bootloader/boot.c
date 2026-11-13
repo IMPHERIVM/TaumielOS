@@ -32,18 +32,15 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable
         return EFI_ERROR(Status) ? Status : EFI_INVALID_PARAMETER; 
         //En caso de que el firmware determine que sea suficiente, lo cual no tiene sentido. Retorna el código del error, y si no retorna EFI_INVALID_PARAMETER.
     }
-    if (DescriptorSize == 0) { //Si el Descriptor tiene tamaño nulo, no es utilizable, lanzamos EFI_COMPROMISED_DATA.
-        return EFI_COMPROMISED_DATA;
-    }
     
     UINTN RequiredSize = MemoryMapSize;
     UINTN NewDescriptorSize = DescriptorSize;
     VOID *Buffer = NULL;
     for (;;) { //Bucle indefinido.
-        if (NewDescriptorSize == 0){
+        if (NewDescriptorSize == 0){ //Si el Descriptor tiene tamaño nulo, no es utilizable, lanzamos EFI_COMPROMISED_DATA.
             return EFI_COMPROMISED_DATA;
         }
-        if (NewDescriptorSize > (MAX_UINTN / 2) || RequiredSize > MAX_UINTN - (2 * NewDescriptorSize)){ //Impide un Size Overflow
+        if (NewDescriptorSize > (MAX_UINTN / 2) || RequiredSize > MAX_UINTN - (2 * NewDescriptorSize)){ //En caso de un posible Size Overflow, devuelve EFI_BAD_BUFFER_SIZE
             return EFI_BAD_BUFFER_SIZE;
         }
         UINTN BufferSize = RequiredSize + (2 * NewDescriptorSize); // Memoria disponible: MS + 2DS adicionales. Allocate some initial memory
@@ -75,10 +72,11 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable
             Buffer = NULL; //Vaciamos el Buffer.
             return Status;
         }
-
         else if (Status==EFI_SUCCESS){
+            BufferStatus = BS->FreePool(&Buffer);
             break;
         }
+        BufferStatus = BS->FreePool(&Buffer);
         RequiredSize = BufferSize; //Reajustamos el Tamaño requerido a nuestras necesidades
         
 
